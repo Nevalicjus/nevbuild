@@ -2,6 +2,20 @@ use std::env;
 use std::process::Command;
 use std::ffi::OsStr;
 
+fn py(file: &str) {
+	let _ = Command::new("python3").arg(file).status().expect("");
+}
+
+fn java(name: &str, file: &str) {
+	let _ = Command::new("javac").arg(file).status().expect("");
+	let _ = Command::new("java").arg(name).status().expect("");
+	let _ = Command::new("rm").arg(format!("{}.class", name)).status().expect("");
+}
+
+fn unsupported() {
+	println!("This file type is currently unsupported :(")
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
@@ -14,17 +28,12 @@ fn main() {
     	println!("File has to exist!");
         std::process::exit(1);
     }
+    let name = path.file_stem().and_then(OsStr::to_str).expect("");
     let ext = path.extension().and_then(OsStr::to_str).expect("");
+    let file = &args[1];
     match ext {
-    	"py" => {
-    		let _ = Command::new("python3").arg(&args[1]).status().expect("");
-    	},
-    	"java" => {
-    		let file = path.file_stem().and_then(OsStr::to_str).expect("");
-    		let _ = Command::new("javac").arg(&args[1]).status().expect("");
-    		let _ = Command::new("java").arg(file).status().expect("");
-    		let _ = Command::new("rm").arg(format!("{}.class", file)).status().expect("");
-    	},
-    	&_ => println!("This file type is currently not supported :(")
+    	"py" => py(file),
+    	"java" => java(name, file),
+    	&_ => unsupported()
     }
 }
