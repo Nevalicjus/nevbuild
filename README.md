@@ -2,83 +2,24 @@
 
 A small script/bin/app to run scripts 'my way' without using per-lang build files.
 
-Currently works for c, cpp, elixir, java, go, js, kotlin, lua, python, ruby, rust, swift and v.
+You can create a .nb.conf file in your $HOME directory to overwrite the defaults provided.
+If you don't, assume they are this:
 
-#### c
-```bash
-#!/bin/bash
-gcc -o out $1 && ./out && rm out
+```yaml
+c: "gcc -o out {file} && ./out && rm out"
+cpp: "g++ -o out {file} && ./out && rm out"
+exs: "elixir {file}"
+go: "go run {file}"
+java: "javac {file} && java {name} && rm {name}.class"
+js: "node {file}"
+kt: "kotlinc {file} -include-runtime -d out.jar && java -jar out.jar && rm out.jar"
+lua: "lua {file}"
+py: "python3 {file}"
+rb: "ruby {file}"
+rs: "rustc -o out {file} && ./out && rm out"
+swift: "swift {file}"
+ts: "node {file}"
+v: "v run {file}"
 ```
 
-#### cpp
-```bash
-#!/bin/bash
-g++ $1 -o out && ./out && rm out
-```
-
-#### elixir
-```bash
-#!/bin/bash
-elixir $1
-```
-
-#### java
-```bash
-#!/bin/bash
-FNAME="$(awk '{split($0, array, "."); print array[1]}' <<< "$1")"
-javac $FNAME.java && java $FNAME && rm $FNAME.class
-```
-
-#### go
-```bash
-#!/bin/bash
-go run $1
-```
-
-#### js
-```bash
-#!/bin/bash
-node $1
-```
-
-#### kotlin
-```bash
-#!/bin/bash
-kotlinc $1 -include-runtime -d out.jar && java -jar out.jar && rm out.jar
-```
-
-#### lua
-```bash
-#!/bin/bash
-lua $1
-```
-
-#### py
-```bash
-#!/bin/bash
-python3 $1
-```
-
-#### ruby
-```bash
-#!/bin/bash
-ruby $1
-```
-
-#### rust
-```bash
-#!/bin/bash
-rustc $1 -o out && ./out && rm out
-```
-
-#### swift
-```bash
-#!/bin/bash
-swift $1
-```
-
-#### v
-```bash
-#!/bin/bash
-v run $1
-```
+`{file}` gets replaced with the full name, `{name}` with the name (without extension), and `{ext}` with the extesion
