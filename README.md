@@ -22,4 +22,6 @@ ts: "node {file}"
 v: "v run {file}"
 ```
 
-`{file}` gets replaced with the full name, `{name}` with the name (without extension), and `{ext}` with the extesion
+`{file}` -> full name, </br>
+`{name}` -> (without extension), </br>
+`{ext}` -> extesion
