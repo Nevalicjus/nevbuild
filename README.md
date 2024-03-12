@@ -24,4 +24,4 @@ v: "v run {file}"
 
 `{file}` -> full name, </br>
 `{name}` -> (without extension), </br>
-`{ext}` -> extesion
+`{ext}` -> extension
