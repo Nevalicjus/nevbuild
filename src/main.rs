@@ -1,21 +1,23 @@
-use std::env;
-use std::process::Command;
-use std::ffi::OsStr;
-use std::path::Path;
-use std::fs::File;
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    env,
+    ffi::OsStr,
+    fs::File,
+    path::Path,
+    process::{exit, Command}
+};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("Usage: nb <file_path>");
-        std::process::exit(1);
+        exit(1);
     }
     let mut path = env::current_dir().expect("");
     path.push(&args[1]);
     if !path.exists() && args[1] != "-h" {
     	println!("File has to exist!");
-        std::process::exit(1);
+        exit(1);
     }
     let home = env::var_os("HOME").expect("Cant get user's home");
     let cffp = format!("{}/.nb.conf", home.to_str().unwrap());
@@ -75,7 +77,7 @@ fn main() {
                 }
             }
         }
-        std::process::exit(1);
+        exit(1);
     }
 
     let name = path.file_stem().and_then(OsStr::to_str).expect("");
@@ -90,7 +92,7 @@ fn main() {
 	    
 	if cmd.is_empty() {
 		println!("This file type is currently unsupported :(");
-		std::process::exit(1);
+		exit(1);
 	}
 	let pargs: String = args.iter().skip(2).cloned().collect::<Vec<String>>().join(" ");
     let status = Command::new("sh").arg("-c").arg(format!("{} {}", cmd, pargs)).status();
@@ -100,4 +102,5 @@ fn main() {
             println!("Error executing command: {}", err);
         }
     }
+    exit(0);
 }
